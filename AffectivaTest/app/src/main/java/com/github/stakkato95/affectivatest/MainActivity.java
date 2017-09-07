@@ -8,7 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.affectiva.android.affdex.sdk.Frame;
 import com.affectiva.android.affdex.sdk.detector.CameraDetector;
@@ -38,11 +38,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onImageResults(List<Face> list, Frame frame, float v) {
                 if ((list != null) && !list.isEmpty()) {
-                    Toast.makeText(
-                            MainActivity.this,
-                            "joy=" + list.get(0).emotions.getJoy(),
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    Face.Emotions emotions = list.get(0).emotions;
+
+
+                    String text = "joy=" + emotions.getJoy() + " \nanger=" + emotions.getAnger() +
+                            " \nsadness=" + emotions.getSadness() + " \nEngagement=" + emotions.getEngagement() +
+                            " \nSurprise=" + emotions.getSurprise() + " \nFear=" + emotions.getFear();
+
+                    MainActivity.this.<TextView>findViewById(R.id.text).setText(text);
                 }
             }
         });
@@ -79,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        cameraDetector.setDetectAllExpressions(true);
+        cameraDetector.setDetectAllEmotions(true);
+//        cameraDetector.setDetectAllEmojis(true);
+//        cameraDetector.setDetectAllAppearances(true);
 
         int permissionCheckResult = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
